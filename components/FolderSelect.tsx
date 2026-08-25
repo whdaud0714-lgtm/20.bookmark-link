@@ -12,12 +12,12 @@ export default function FolderSelect({
   onChange,
 }: FolderSelectProps) {
   return (
-    <label className="flex flex-col gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+    <label className="flex flex-col gap-1.5 text-sm font-bold text-[var(--text)]">
       폴더
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-600"
+        className="input-field rounded-xl bg-[var(--card-bg)] px-3.5 py-3 text-sm font-normal text-[var(--text)]"
       >
         {folders.map((folder) => (
           <option key={folder.id} value={folder.id}>

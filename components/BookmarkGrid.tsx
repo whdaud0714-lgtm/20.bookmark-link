@@ -8,7 +8,7 @@ type BookmarkGridProps = {
 export default function BookmarkGrid({ bookmarks }: BookmarkGridProps) {
   if (bookmarks.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center p-6 text-sm text-zinc-400 dark:text-zinc-500">
+      <div className="flex flex-1 items-center justify-center p-6 text-sm text-[var(--text-sub)]">
         등록된 링크가 없습니다.
       </div>
     );

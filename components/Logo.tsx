@@ -4,9 +4,9 @@ export default function Logo() {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2 text-lg font-bold tracking-tight text-zinc-900 dark:text-zinc-50"
+      className="flex items-center gap-2 text-lg font-bold tracking-tight text-[var(--text)]"
     >
-      <span className="flex h-7 w-7 items-center justify-center rounded-md bg-zinc-900 text-sm text-white dark:bg-zinc-50 dark:text-zinc-900">
+      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--accent)] text-sm font-bold text-white">
         B
       </span>
       북마크 링크

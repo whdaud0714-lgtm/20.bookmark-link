@@ -24,11 +24,9 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-md flex-col gap-5 rounded-xl border border-zinc-200 p-6 dark:border-zinc-800"
+      className="card-hover flex w-full max-w-md flex-col gap-5 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6"
     >
-      <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-        새 링크 추가
-      </h1>
+      <h1 className="text-lg font-bold text-[var(--text)]">새 링크 추가</h1>
       <LinkInput value={url} onChange={setUrl} />
       <FolderSelect folders={folders} value={folderId} onChange={setFolderId} />
       <SaveButton />

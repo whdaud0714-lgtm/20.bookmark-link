@@ -3,7 +3,7 @@ import NewLinkButton from "./NewLinkButton";
 
 export default function Header() {
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 px-6 dark:border-zinc-800">
+    <header className="flex h-14 shrink-0 items-center justify-between bg-[var(--card-bg)] px-5 shadow-[0_1px_0_rgba(0,0,0,0.06)]">
       <Logo />
       <NewLinkButton />
     </header>
