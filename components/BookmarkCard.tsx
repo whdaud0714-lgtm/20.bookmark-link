@@ -3,8 +3,9 @@
 import { useState, type MouseEvent } from "react";
 import type { Bookmark } from "@/app/_lib/types";
 import { useBookmarks } from "@/app/_lib/BookmarkContext";
-import { GlobeIcon, TrashIcon } from "./icons";
+import { GlobeIcon, PencilIcon, TrashIcon } from "./icons";
 import DeleteBookmarkModal from "./DeleteBookmarkModal";
+import EditBookmarkModal from "./EditBookmarkModal";
 
 function getHostname(url: string) {
   try {
@@ -20,7 +21,14 @@ type BookmarkCardProps = {
 
 export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
   const { deleteBookmark } = useBookmarks();
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleEditClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setShowEditModal(true);
+  };
 
   const handleDeleteClick = (event: MouseEvent) => {
     event.preventDefault();
@@ -67,14 +75,31 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
         </div>
       </a>
 
-      <button
-        type="button"
-        onClick={handleDeleteClick}
-        aria-label={`${bookmark.title} 링크 삭제`}
-        className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--card-bg)] text-[var(--text-sub)] opacity-0 shadow-sm hover:bg-black/10 group-hover:opacity-100"
-      >
-        <TrashIcon className="h-4 w-4" />
-      </button>
+      <div className="absolute top-3 right-3 flex items-center gap-1">
+        <button
+          type="button"
+          onClick={handleEditClick}
+          aria-label={`${bookmark.title} 링크 수정`}
+          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--card-bg)] text-[var(--text-sub)] opacity-0 shadow-sm hover:bg-black/10 group-hover:opacity-100"
+        >
+          <PencilIcon className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          aria-label={`${bookmark.title} 링크 삭제`}
+          className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--card-bg)] text-[var(--text-sub)] opacity-0 shadow-sm hover:bg-black/10 group-hover:opacity-100"
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
+      </div>
+
+      {showEditModal && (
+        <EditBookmarkModal
+          bookmark={bookmark}
+          onClose={() => setShowEditModal(false)}
+        />
+      )}
 
       {showDeleteModal && (
         <DeleteBookmarkModal

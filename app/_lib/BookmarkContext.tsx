@@ -11,10 +11,17 @@ type NewBookmarkInput = {
   folderId: string;
 };
 
+type BookmarkUpdateInput = {
+  title: string;
+  description: string;
+  folderId: string;
+};
+
 type BookmarkContextValue = {
   bookmarks: Bookmark[];
   addBookmark: (input: NewBookmarkInput) => void;
   deleteBookmark: (id: string) => void;
+  updateBookmark: (id: string, input: BookmarkUpdateInput) => void;
 };
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
@@ -42,8 +49,18 @@ export default function BookmarkProvider({
     setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
   };
 
+  const updateBookmark = (id: string, input: BookmarkUpdateInput) => {
+    setBookmarks((prev) =>
+      prev.map((bookmark) =>
+        bookmark.id === id ? { ...bookmark, ...input } : bookmark
+      )
+    );
+  };
+
   return (
-    <BookmarkContext.Provider value={{ bookmarks, addBookmark, deleteBookmark }}>
+    <BookmarkContext.Provider
+      value={{ bookmarks, addBookmark, deleteBookmark, updateBookmark }}
+    >
       {children}
     </BookmarkContext.Provider>
   );
