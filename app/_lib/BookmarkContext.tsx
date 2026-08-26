@@ -14,6 +14,7 @@ type NewBookmarkInput = {
 type BookmarkContextValue = {
   bookmarks: Bookmark[];
   addBookmark: (input: NewBookmarkInput) => void;
+  deleteBookmark: (id: string) => void;
 };
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
@@ -37,8 +38,12 @@ export default function BookmarkProvider({
     setBookmarks((prev) => [newBookmark, ...prev]);
   };
 
+  const deleteBookmark = (id: string) => {
+    setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
+  };
+
   return (
-    <BookmarkContext.Provider value={{ bookmarks, addBookmark }}>
+    <BookmarkContext.Provider value={{ bookmarks, addBookmark, deleteBookmark }}>
       {children}
     </BookmarkContext.Provider>
   );
