@@ -21,6 +21,14 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       rel="noopener noreferrer"
       className="card-hover group flex flex-col gap-3 rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-4"
     >
+      {bookmark.thumbnail && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={bookmark.thumbnail}
+          alt=""
+          className="h-32 w-full rounded-xl object-cover"
+        />
+      )}
       <div className="flex items-center gap-2">
         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--hover-bg)] text-[var(--accent)]">
           <GlobeIcon className="h-4 w-4" />

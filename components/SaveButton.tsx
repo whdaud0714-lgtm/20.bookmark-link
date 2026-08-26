@@ -1,10 +1,15 @@
-export default function SaveButton() {
+type SaveButtonProps = {
+  loading?: boolean;
+};
+
+export default function SaveButton({ loading = false }: SaveButtonProps) {
   return (
     <button
       type="submit"
-      className="btn-primary mt-2 flex items-center justify-center rounded-xl px-4 py-3 text-sm font-bold"
+      disabled={loading}
+      className="btn-primary mt-2 flex items-center justify-center rounded-xl px-4 py-3 text-sm font-bold disabled:opacity-60"
     >
-      저장
+      {loading ? "저장 중..." : "저장"}
     </button>
   );
 }

@@ -1,10 +1,14 @@
-import BookmarkGrid from "@/components/BookmarkGrid";
-import { bookmarks } from "@/app/_lib/mock-data";
+"use client";
 
-export default async function FolderPage(props: PageProps<"/folder/[folderId]">) {
-  const { folderId } = await props.params;
+import { useParams } from "next/navigation";
+import BookmarkGrid from "@/components/BookmarkGrid";
+import { useBookmarks } from "@/app/_lib/BookmarkContext";
+
+export default function FolderPage() {
+  const params = useParams<{ folderId: string }>();
+  const { bookmarks } = useBookmarks();
   const folderBookmarks = bookmarks.filter(
-    (bookmark) => bookmark.folderId === folderId
+    (bookmark) => bookmark.folderId === params.folderId
   );
 
   return <BookmarkGrid bookmarks={folderBookmarks} />;
