@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { useState, type MouseEvent } from "react";
 import type { Folder } from "@/app/_lib/types";
 import { useFolders } from "@/app/_lib/FolderContext";
-import { FolderIcon, TrashIcon } from "./icons";
+import { FolderIcon, PencilIcon, TrashIcon } from "./icons";
 import DeleteFolderModal from "./DeleteFolderModal";
+import EditFolderModal from "./EditFolderModal";
 
 type FolderListItemProps = {
   folder: Folder;
@@ -17,6 +18,13 @@ export default function FolderListItem({ folder, active }: FolderListItemProps) 
   const { deleteFolder } = useFolders();
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const handleEditClick = (event: MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setShowEditModal(true);
+  };
 
   const handleDeleteClick = (event: MouseEvent) => {
     event.preventDefault();
@@ -36,23 +44,39 @@ export default function FolderListItem({ folder, active }: FolderListItemProps) 
     <div className="group relative">
       <Link
         href={`/folder/${folder.id}`}
-        className={`folder-link flex w-full items-center gap-2 rounded-xl py-2 pr-9 pl-3 text-sm font-bold ${
+        className={`folder-link flex w-full items-center gap-2 rounded-xl py-2 pr-16 pl-3 text-sm font-bold ${
           active ? "active" : ""
         }`}
       >
         <FolderIcon className="h-4 w-4 shrink-0" />
         <span className="truncate">{folder.name}</span>
       </Link>
-      <button
-        type="button"
-        onClick={handleDeleteClick}
-        aria-label={`${folder.name} 폴더 삭제`}
-        className={`absolute top-1/2 right-2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-lg opacity-0 hover:bg-black/10 group-hover:opacity-100 ${
-          active ? "text-white" : "text-[var(--text-sub)]"
-        }`}
-      >
-        <TrashIcon className="h-4 w-4" />
-      </button>
+      <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-0.5">
+        <button
+          type="button"
+          onClick={handleEditClick}
+          aria-label={`${folder.name} 폴더 수정`}
+          className={`flex h-6 w-6 items-center justify-center rounded-lg opacity-0 hover:bg-black/10 group-hover:opacity-100 ${
+            active ? "text-white" : "text-[var(--text-sub)]"
+          }`}
+        >
+          <PencilIcon className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={handleDeleteClick}
+          aria-label={`${folder.name} 폴더 삭제`}
+          className={`flex h-6 w-6 items-center justify-center rounded-lg opacity-0 hover:bg-black/10 group-hover:opacity-100 ${
+            active ? "text-white" : "text-[var(--text-sub)]"
+          }`}
+        >
+          <TrashIcon className="h-4 w-4" />
+        </button>
+      </div>
+
+      {showEditModal && (
+        <EditFolderModal folder={folder} onClose={() => setShowEditModal(false)} />
+      )}
 
       {showDeleteModal && (
         <DeleteFolderModal
