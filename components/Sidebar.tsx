@@ -1,15 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import type { Folder } from "@/app/_lib/types";
+import { useFolders } from "@/app/_lib/FolderContext";
 import AllButton from "./AllButton";
 import FolderList from "./FolderList";
 
-type SidebarProps = {
-  folders: Folder[];
-};
-
-export default function Sidebar({ folders }: SidebarProps) {
+export default function Sidebar() {
+  const { folders } = useFolders();
   const pathname = usePathname();
   const activeFolderId = pathname?.startsWith("/folder/")
     ? (pathname.split("/")[2] ?? null)
