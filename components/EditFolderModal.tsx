@@ -10,14 +10,18 @@ type EditFolderModalProps = {
 };
 
 export default function EditFolderModal({ folder, onClose }: EditFolderModalProps) {
-  const { updateFolder } = useFolders();
+  const { updateFolder, isUpdatingFolder } = useFolders();
   const [name, setName] = useState(folder.name);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmed = name.trim();
-    if (!trimmed) return;
-    updateFolder(folder.id, trimmed);
+    if (!trimmed || isUpdatingFolder) return;
+    if (trimmed === folder.name) {
+      onClose();
+      return;
+    }
+    await updateFolder(folder.id, trimmed);
     onClose();
   };
 
@@ -44,15 +48,17 @@ export default function EditFolderModal({ folder, onClose }: EditFolderModalProp
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)]"
+            disabled={isUpdatingFolder}
+            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)] disabled:opacity-50"
           >
             취소
           </button>
           <button
             type="submit"
-            className="btn-primary flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-bold"
+            disabled={isUpdatingFolder}
+            className="btn-primary flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-bold disabled:opacity-50"
           >
-            저장
+            {isUpdatingFolder ? "저장 중..." : "저장"}
           </button>
         </div>
       </form>

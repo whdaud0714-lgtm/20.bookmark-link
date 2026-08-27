@@ -7,9 +7,10 @@ import type { Folder } from "./types";
 type FolderContextValue = {
   folders: Folder[];
   isAddingFolder: boolean;
+  isUpdatingFolder: boolean;
   addFolder: (name: string) => Promise<void>;
   deleteFolder: (id: string) => void;
-  updateFolder: (id: string, name: string) => void;
+  updateFolder: (id: string, name: string) => Promise<void>;
 };
 
 const FolderContext = createContext<FolderContextValue | null>(null);
@@ -25,6 +26,7 @@ export default function FolderProvider({
 }: FolderProviderProps) {
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const [isUpdatingFolder, setIsUpdatingFolder] = useState(false);
 
   const addFolder = async (name: string) => {
     if (isAddingFolder) return;
@@ -50,15 +52,34 @@ export default function FolderProvider({
     setFolders((prev) => prev.filter((folder) => folder.id !== id));
   };
 
-  const updateFolder = (id: string, name: string) => {
-    setFolders((prev) =>
-      prev.map((folder) => (folder.id === id ? { ...folder, name } : folder))
-    );
+  const updateFolder = async (id: string, name: string) => {
+    if (isUpdatingFolder) return;
+    setIsUpdatingFolder(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("folders")
+        .update({ name })
+        .eq("id", Number(id));
+      if (error) return;
+      setFolders((prev) =>
+        prev.map((folder) => (folder.id === id ? { ...folder, name } : folder))
+      );
+    } finally {
+      setIsUpdatingFolder(false);
+    }
   };
 
   return (
     <FolderContext.Provider
-      value={{ folders, isAddingFolder, addFolder, deleteFolder, updateFolder }}
+      value={{
+        folders,
+        isAddingFolder,
+        isUpdatingFolder,
+        addFolder,
+        deleteFolder,
+        updateFolder,
+      }}
     >
       {children}
     </FolderContext.Provider>
