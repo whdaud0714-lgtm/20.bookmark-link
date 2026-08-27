@@ -1,11 +1,13 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { createClient } from "@/utils/supabase/client";
 import type { Folder } from "./types";
 
 type FolderContextValue = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  isAddingFolder: boolean;
+  addFolder: (name: string) => Promise<void>;
   deleteFolder: (id: string) => void;
   updateFolder: (id: string, name: string) => void;
 };
@@ -22,13 +24,26 @@ export default function FolderProvider({
   children,
 }: FolderProviderProps) {
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
+  const [isAddingFolder, setIsAddingFolder] = useState(false);
 
-  const addFolder = (name: string) => {
-    const newFolder: Folder = {
-      id: `folder-${Date.now()}`,
-      name,
-    };
-    setFolders((prev) => [...prev, newFolder]);
+  const addFolder = async (name: string) => {
+    if (isAddingFolder) return;
+    setIsAddingFolder(true);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("folders")
+        .insert({ name })
+        .select("id, name")
+        .single();
+      if (error || !data) return;
+      setFolders((prev) => [
+        ...prev,
+        { id: String(data.id), name: data.name },
+      ]);
+    } finally {
+      setIsAddingFolder(false);
+    }
   };
 
   const deleteFolder = (id: string) => {
@@ -43,7 +58,7 @@ export default function FolderProvider({
 
   return (
     <FolderContext.Provider
-      value={{ folders, addFolder, deleteFolder, updateFolder }}
+      value={{ folders, isAddingFolder, addFolder, deleteFolder, updateFolder }}
     >
       {children}
     </FolderContext.Provider>
