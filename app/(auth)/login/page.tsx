@@ -13,15 +13,23 @@ export default function LoginPage() {
 
       <LoginForm />
 
-      <p className="text-center text-[13px] text-[var(--text-sub)]">
-        아직 계정이 없으신가요?{" "}
+      <div className="flex flex-col items-center gap-2 text-[13px]">
         <Link
-          href="/signup"
+          href="/forgot-password"
           className="font-bold text-[var(--accent)] hover:opacity-80"
         >
-          회원가입
+          비밀번호 찾기
         </Link>
-      </p>
+        <p className="text-[var(--text-sub)]">
+          아직 계정이 없으신가요?{" "}
+          <Link
+            href="/signup"
+            className="font-bold text-[var(--accent)] hover:opacity-80"
+          >
+            회원가입
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
