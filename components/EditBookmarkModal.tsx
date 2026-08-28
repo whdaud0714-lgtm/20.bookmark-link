@@ -18,17 +18,17 @@ export default function EditBookmarkModal({
   onClose,
 }: EditBookmarkModalProps) {
   const { folders } = useFolders();
-  const { updateBookmark } = useBookmarks();
+  const { updateBookmark, isUpdatingBookmark } = useBookmarks();
   const [title, setTitle] = useState(bookmark.title);
   const [description, setDescription] = useState(bookmark.description);
   const [folderId, setFolderId] = useState(bookmark.folderId);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const trimmedTitle = title.trim();
-    if (!trimmedTitle) return;
+    if (!trimmedTitle || isUpdatingBookmark) return;
 
-    updateBookmark(bookmark.id, {
+    await updateBookmark(bookmark.id, {
       title: trimmedTitle,
       description: description.trim(),
       folderId,
@@ -50,15 +50,17 @@ export default function EditBookmarkModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)]"
+            disabled={isUpdatingBookmark}
+            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)] disabled:opacity-50"
           >
             취소
           </button>
           <button
             type="submit"
-            className="btn-primary flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-bold"
+            disabled={isUpdatingBookmark}
+            className="btn-primary flex items-center justify-center rounded-xl px-4 py-2.5 text-sm font-bold disabled:opacity-50"
           >
-            저장
+            {isUpdatingBookmark ? "저장 중..." : "저장"}
           </button>
         </div>
       </form>

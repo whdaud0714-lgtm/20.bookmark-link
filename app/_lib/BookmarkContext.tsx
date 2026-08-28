@@ -21,9 +21,10 @@ type BookmarkUpdateInput = {
 type BookmarkContextValue = {
   bookmarks: Bookmark[];
   isAddingBookmark: boolean;
+  isUpdatingBookmark: boolean;
   addBookmark: (input: NewBookmarkInput) => Promise<void>;
   deleteBookmark: (id: string) => void;
-  updateBookmark: (id: string, input: BookmarkUpdateInput) => void;
+  updateBookmark: (id: string, input: BookmarkUpdateInput) => Promise<void>;
 };
 
 const BookmarkContext = createContext<BookmarkContextValue | null>(null);
@@ -39,6 +40,7 @@ export default function BookmarkProvider({
 }: BookmarkProviderProps) {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(initialBookmarks);
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
+  const [isUpdatingBookmark, setIsUpdatingBookmark] = useState(false);
 
   const addBookmark = async (input: NewBookmarkInput) => {
     if (isAddingBookmark) return;
@@ -75,12 +77,28 @@ export default function BookmarkProvider({
     setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
   };
 
-  const updateBookmark = (id: string, input: BookmarkUpdateInput) => {
-    setBookmarks((prev) =>
-      prev.map((bookmark) =>
-        bookmark.id === id ? { ...bookmark, ...input } : bookmark
-      )
-    );
+  const updateBookmark = async (id: string, input: BookmarkUpdateInput) => {
+    if (isUpdatingBookmark) return;
+    setIsUpdatingBookmark(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("links")
+        .update({
+          title: input.title,
+          description: input.description,
+          folder_id: Number(input.folderId),
+        })
+        .eq("id", Number(id));
+      if (error) return;
+      setBookmarks((prev) =>
+        prev.map((bookmark) =>
+          bookmark.id === id ? { ...bookmark, ...input } : bookmark
+        )
+      );
+    } finally {
+      setIsUpdatingBookmark(false);
+    }
   };
 
   return (
@@ -88,6 +106,7 @@ export default function BookmarkProvider({
       value={{
         bookmarks,
         isAddingBookmark,
+        isUpdatingBookmark,
         addBookmark,
         deleteBookmark,
         updateBookmark,
