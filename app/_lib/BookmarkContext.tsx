@@ -22,8 +22,9 @@ type BookmarkContextValue = {
   bookmarks: Bookmark[];
   isAddingBookmark: boolean;
   isUpdatingBookmark: boolean;
+  isDeletingBookmark: boolean;
   addBookmark: (input: NewBookmarkInput) => Promise<void>;
-  deleteBookmark: (id: string) => void;
+  deleteBookmark: (id: string) => Promise<void>;
   updateBookmark: (id: string, input: BookmarkUpdateInput) => Promise<void>;
 };
 
@@ -41,6 +42,7 @@ export default function BookmarkProvider({
   const [bookmarks, setBookmarks] = useState<Bookmark[]>(initialBookmarks);
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
   const [isUpdatingBookmark, setIsUpdatingBookmark] = useState(false);
+  const [isDeletingBookmark, setIsDeletingBookmark] = useState(false);
 
   const addBookmark = async (input: NewBookmarkInput) => {
     if (isAddingBookmark) return;
@@ -73,8 +75,20 @@ export default function BookmarkProvider({
     }
   };
 
-  const deleteBookmark = (id: string) => {
-    setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
+  const deleteBookmark = async (id: string) => {
+    if (isDeletingBookmark) return;
+    setIsDeletingBookmark(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("links")
+        .delete()
+        .eq("id", Number(id));
+      if (error) return;
+      setBookmarks((prev) => prev.filter((bookmark) => bookmark.id !== id));
+    } finally {
+      setIsDeletingBookmark(false);
+    }
   };
 
   const updateBookmark = async (id: string, input: BookmarkUpdateInput) => {
@@ -107,6 +121,7 @@ export default function BookmarkProvider({
         bookmarks,
         isAddingBookmark,
         isUpdatingBookmark,
+        isDeletingBookmark,
         addBookmark,
         deleteBookmark,
         updateBookmark,

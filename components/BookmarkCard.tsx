@@ -20,7 +20,7 @@ type BookmarkCardProps = {
 };
 
 export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
-  const { deleteBookmark } = useBookmarks();
+  const { deleteBookmark, isDeletingBookmark } = useBookmarks();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -36,8 +36,8 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    deleteBookmark(bookmark.id);
+  const handleConfirmDelete = async () => {
+    await deleteBookmark(bookmark.id);
     setShowDeleteModal(false);
   };
 
@@ -104,6 +104,7 @@ export default function BookmarkCard({ bookmark }: BookmarkCardProps) {
       {showDeleteModal && (
         <DeleteBookmarkModal
           bookmark={bookmark}
+          isDeleting={isDeletingBookmark}
           onConfirm={handleConfirmDelete}
           onClose={() => setShowDeleteModal(false)}
         />
