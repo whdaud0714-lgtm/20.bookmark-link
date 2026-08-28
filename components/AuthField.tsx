@@ -4,6 +4,8 @@ type AuthFieldProps = {
   name: string;
   placeholder: string;
   autoComplete?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 };
 
 export default function AuthField({
@@ -12,6 +14,8 @@ export default function AuthField({
   name,
   placeholder,
   autoComplete,
+  value,
+  onChange,
 }: AuthFieldProps) {
   return (
     <label className="flex flex-col gap-1.5 text-sm font-bold text-[var(--text)]">
@@ -22,6 +26,9 @@ export default function AuthField({
         placeholder={placeholder}
         autoComplete={autoComplete}
         className="input-field rounded-xl bg-[var(--card-bg)] px-3.5 py-3 text-sm font-normal text-[var(--text)] placeholder:text-[var(--placeholder)]"
+        {...(value !== undefined
+          ? { value, onChange: (event) => onChange?.(event.target.value) }
+          : {})}
       />
     </label>
   );
