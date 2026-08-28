@@ -78,6 +78,17 @@ button,
   transform: scale(0.97);
 }
 
+.logout-btn {
+  color: var(--text-sub);
+}
+.logout-btn:hover {
+  background: var(--hover-bg);
+  color: var(--accent);
+}
+.logout-btn:active {
+  transform: scale(0.97);
+}
+
 .input-field {
   border: 1px solid var(--border);
 }

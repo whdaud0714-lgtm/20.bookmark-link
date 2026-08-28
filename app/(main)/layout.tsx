@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import FolderProvider from "@/app/_lib/FolderContext";
@@ -12,6 +13,15 @@ export default async function MainLayout({
   children: React.ReactNode;
 }) {
   const supabase = createClient(await cookies());
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   const [{ data: folderData }, { data: linkData }] = await Promise.all([
     supabase
       .from("folders")

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useFolders } from "@/app/_lib/FolderContext";
 import AllButton from "./AllButton";
 import FolderList from "./FolderList";
+import LogoutButton from "./LogoutButton";
 
 export default function Sidebar() {
   const { folders } = useFolders();
@@ -21,6 +22,7 @@ export default function Sidebar() {
         </p>
         <FolderList folders={folders} activeFolderId={activeFolderId} />
       </div>
+      <LogoutButton />
     </aside>
   );
 }
