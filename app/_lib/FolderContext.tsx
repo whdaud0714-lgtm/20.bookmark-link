@@ -8,8 +8,9 @@ type FolderContextValue = {
   folders: Folder[];
   isAddingFolder: boolean;
   isUpdatingFolder: boolean;
+  isDeletingFolder: boolean;
   addFolder: (name: string) => Promise<void>;
-  deleteFolder: (id: string) => void;
+  deleteFolder: (id: string) => Promise<void>;
   updateFolder: (id: string, name: string) => Promise<void>;
 };
 
@@ -27,6 +28,7 @@ export default function FolderProvider({
   const [folders, setFolders] = useState<Folder[]>(initialFolders);
   const [isAddingFolder, setIsAddingFolder] = useState(false);
   const [isUpdatingFolder, setIsUpdatingFolder] = useState(false);
+  const [isDeletingFolder, setIsDeletingFolder] = useState(false);
 
   const addFolder = async (name: string) => {
     if (isAddingFolder) return;
@@ -48,8 +50,20 @@ export default function FolderProvider({
     }
   };
 
-  const deleteFolder = (id: string) => {
-    setFolders((prev) => prev.filter((folder) => folder.id !== id));
+  const deleteFolder = async (id: string) => {
+    if (isDeletingFolder) return;
+    setIsDeletingFolder(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("folders")
+        .delete()
+        .eq("id", Number(id));
+      if (error) return;
+      setFolders((prev) => prev.filter((folder) => folder.id !== id));
+    } finally {
+      setIsDeletingFolder(false);
+    }
   };
 
   const updateFolder = async (id: string, name: string) => {
@@ -76,6 +90,7 @@ export default function FolderProvider({
         folders,
         isAddingFolder,
         isUpdatingFolder,
+        isDeletingFolder,
         addFolder,
         deleteFolder,
         updateFolder,

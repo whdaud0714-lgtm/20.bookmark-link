@@ -16,7 +16,7 @@ type FolderListItemProps = {
 };
 
 export default function FolderListItem({ folder, active }: FolderListItemProps) {
-  const { deleteFolder } = useFolders();
+  const { deleteFolder, isDeletingFolder } = useFolders();
   const { bookmarks } = useBookmarks();
   const router = useRouter();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -38,8 +38,8 @@ export default function FolderListItem({ folder, active }: FolderListItemProps) 
     setShowDeleteModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    deleteFolder(folder.id);
+  const handleConfirmDelete = async () => {
+    await deleteFolder(folder.id);
     setShowDeleteModal(false);
     if (active) {
       router.push("/");
@@ -96,6 +96,7 @@ export default function FolderListItem({ folder, active }: FolderListItemProps) 
       {showDeleteModal && (
         <DeleteFolderModal
           folder={folder}
+          isDeleting={isDeletingFolder}
           onConfirm={handleConfirmDelete}
           onClose={() => setShowDeleteModal(false)}
         />

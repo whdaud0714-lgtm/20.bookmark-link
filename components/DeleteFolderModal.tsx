@@ -4,12 +4,14 @@ import type { Folder } from "@/app/_lib/types";
 
 type DeleteFolderModalProps = {
   folder: Folder;
+  isDeleting: boolean;
   onConfirm: () => void;
   onClose: () => void;
 };
 
 export default function DeleteFolderModal({
   folder,
+  isDeleting,
   onConfirm,
   onClose,
 }: DeleteFolderModalProps) {
@@ -25,16 +27,18 @@ export default function DeleteFolderModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)]"
+            disabled={isDeleting}
+            className="flex items-center justify-center rounded-xl bg-[var(--hover-bg)] px-4 py-2.5 text-sm font-bold text-[var(--accent)] disabled:opacity-50"
           >
             취소
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex items-center justify-center rounded-xl bg-[var(--error)] px-4 py-2.5 text-sm font-bold text-white"
+            disabled={isDeleting}
+            className="flex items-center justify-center rounded-xl bg-[var(--error)] px-4 py-2.5 text-sm font-bold text-white disabled:opacity-50"
           >
-            삭제
+            {isDeleting ? "삭제 중..." : "삭제"}
           </button>
         </div>
       </div>
