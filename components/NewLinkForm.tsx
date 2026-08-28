@@ -45,7 +45,7 @@ export default function NewLinkForm({ folders }: NewLinkFormProps) {
 
       const preview: LinkPreview = await response.json();
 
-      addBookmark({
+      await addBookmark({
         url: preview.url,
         title: preview.title,
         description: preview.description,
