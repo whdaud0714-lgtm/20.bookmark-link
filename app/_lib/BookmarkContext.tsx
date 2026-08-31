@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { createClient } from "@/utils/supabase/client";
 import type { Bookmark } from "./types";
 
@@ -43,6 +50,54 @@ export default function BookmarkProvider({
   const [isAddingBookmark, setIsAddingBookmark] = useState(false);
   const [isUpdatingBookmark, setIsUpdatingBookmark] = useState(false);
   const [isDeletingBookmark, setIsDeletingBookmark] = useState(false);
+  const currentUserIdRef = useRef<string | null | undefined>(undefined);
+
+  // 로그인한 사용자 계정이 바뀌면(로그아웃/다른 계정 로그인 등) 북마크 목록을 다시 불러온다.
+  useEffect(() => {
+    const supabase = createClient();
+
+    const fetchBookmarksForUser = async (userId: string) => {
+      const { data, error } = await supabase
+        .from("links")
+        .select("id, url, title, description, thumbnail_url, folder_id")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+      if (error) return;
+      setBookmarks(
+        (data ?? []).map((link) => ({
+          id: String(link.id),
+          url: link.url,
+          title: link.title ?? "",
+          description: link.description ?? "",
+          thumbnail: link.thumbnail_url,
+          folderId: link.folder_id == null ? "" : String(link.folder_id),
+        }))
+      );
+    };
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const nextUserId = session?.user?.id ?? null;
+
+      if (currentUserIdRef.current === undefined) {
+        // 최초 콜백은 서버에서 이미 불러온 초기 데이터에 대응하므로 건너뛴다.
+        currentUserIdRef.current = nextUserId;
+        return;
+      }
+
+      if (nextUserId === currentUserIdRef.current) return;
+      currentUserIdRef.current = nextUserId;
+
+      if (!nextUserId) {
+        setBookmarks([]);
+        return;
+      }
+      void fetchBookmarksForUser(nextUserId);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const addBookmark = async (input: NewBookmarkInput) => {
     if (isAddingBookmark) return;

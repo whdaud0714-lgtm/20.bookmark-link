@@ -26,10 +26,12 @@ export default async function MainLayout({
     supabase
       .from("folders")
       .select("id, name")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: true }),
     supabase
       .from("links")
       .select("id, url, title, description, thumbnail_url, folder_id")
+      .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
   ]);
 
