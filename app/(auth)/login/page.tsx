@@ -1,5 +1,11 @@
 import Link from "next/link";
 import LoginForm from "@/components/LoginForm";
+import { buildMetadata } from "@/app/_lib/metadata";
+
+export const metadata = buildMetadata({
+  title: "로그인",
+  description: "북마크 링크에 로그인하고 나만의 링크를 관리해보세요.",
+});
 
 export default function LoginPage() {
   return (

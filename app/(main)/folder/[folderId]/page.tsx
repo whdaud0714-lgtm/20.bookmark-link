@@ -1,15 +1,11 @@
-"use client";
+import { buildMetadata } from "@/app/_lib/metadata";
+import FolderView from "./FolderView";
 
-import { useParams } from "next/navigation";
-import BookmarkGrid from "@/components/BookmarkGrid";
-import { useBookmarks } from "@/app/_lib/BookmarkContext";
+export const metadata = buildMetadata({
+  title: "폴더",
+  description: "폴더별로 정리된 북마크를 확인하세요.",
+});
 
 export default function FolderPage() {
-  const params = useParams<{ folderId: string }>();
-  const { bookmarks } = useBookmarks();
-  const folderBookmarks = bookmarks.filter(
-    (bookmark) => bookmark.folderId === params.folderId
-  );
-
-  return <BookmarkGrid bookmarks={folderBookmarks} />;
+  return <FolderView />;
 }

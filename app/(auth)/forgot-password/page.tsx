@@ -1,5 +1,11 @@
 import Link from "next/link";
 import ForgotPasswordForm from "@/components/ForgotPasswordForm";
+import { buildMetadata } from "@/app/_lib/metadata";
+
+export const metadata = buildMetadata({
+  title: "비밀번호 찾기",
+  description: "가입하신 이메일로 비밀번호 재설정 링크를 보내드립니다.",
+});
 
 export default function ForgotPasswordPage() {
   return (

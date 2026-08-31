@@ -1,9 +1,11 @@
-"use client";
+import { buildMetadata } from "@/app/_lib/metadata";
+import HomeView from "./HomeView";
 
-import BookmarkGrid from "@/components/BookmarkGrid";
-import { useBookmarks } from "@/app/_lib/BookmarkContext";
+export const metadata = buildMetadata({
+  title: "홈",
+  description: "저장한 모든 북마크를 한눈에 확인하세요.",
+});
 
 export default function Home() {
-  const { bookmarks } = useBookmarks();
-  return <BookmarkGrid bookmarks={bookmarks} />;
+  return <HomeView />;
 }

@@ -1,14 +1,11 @@
-"use client";
+import { buildMetadata } from "@/app/_lib/metadata";
+import NewLinkView from "./NewLinkView";
 
-import NewLinkForm from "@/components/NewLinkForm";
-import { useFolders } from "@/app/_lib/FolderContext";
+export const metadata = buildMetadata({
+  title: "새 링크 추가",
+  description: "새로운 북마크 링크를 추가해보세요.",
+});
 
 export default function NewLinkPage() {
-  const { folders } = useFolders();
-
-  return (
-    <div className="flex flex-1 items-start justify-center overflow-y-auto p-6">
-      <NewLinkForm folders={folders} />
-    </div>
-  );
+  return <NewLinkView />;
 }

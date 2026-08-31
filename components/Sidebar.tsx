@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useFolders } from "@/app/_lib/FolderContext";
 import AllButton from "./AllButton";
@@ -23,6 +24,12 @@ export default function Sidebar() {
         <FolderList folders={folders} activeFolderId={activeFolderId} />
       </div>
       <LogoutButton />
+      <Link
+        href="/privacy"
+        className="px-3 text-xs text-[var(--text-sub)] hover:underline"
+      >
+        개인정보 처리방침
+      </Link>
     </aside>
   );
 }

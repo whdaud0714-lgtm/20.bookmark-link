@@ -1,4 +1,10 @@
 import ResetPasswordForm from "@/components/ResetPasswordForm";
+import { buildMetadata } from "@/app/_lib/metadata";
+
+export const metadata = buildMetadata({
+  title: "비밀번호 재설정",
+  description: "새로 사용할 비밀번호를 입력해 주세요.",
+});
 
 export default function ResetPasswordPage() {
   return (

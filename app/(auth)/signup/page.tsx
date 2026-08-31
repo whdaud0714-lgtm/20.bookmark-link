@@ -1,5 +1,11 @@
 import Link from "next/link";
 import SignupForm from "@/components/SignupForm";
+import { buildMetadata } from "@/app/_lib/metadata";
+
+export const metadata = buildMetadata({
+  title: "회원가입",
+  description: "북마크 링크에 가입하고 나만의 링크를 정리해보세요.",
+});
 
 export default function SignupPage() {
   return (
@@ -22,6 +28,12 @@ export default function SignupPage() {
           로그인
         </Link>
       </p>
+      <Link
+        href="/privacy"
+        className="text-center text-[13px] text-[var(--text-sub)] hover:underline"
+      >
+        개인정보 처리방침
+      </Link>
     </div>
   );
 }
