@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import AuthField from "./AuthField";
 import Toast from "./Toast";
+import KakaoLoginButton from "./KakaoLoginButton";
 
 function toKoreanMessage(message: string) {
   const normalized = message.toLowerCase();
@@ -89,6 +90,7 @@ export default function LoginForm() {
         >
           {isSubmitting ? "로그인 중..." : "로그인"}
         </button>
+        <KakaoLoginButton />
       </form>
     </>
   );
