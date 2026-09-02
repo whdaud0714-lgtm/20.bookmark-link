@@ -10,9 +10,9 @@ export const siteOgImage: NonNullable<
   NonNullable<Metadata["openGraph"]>["images"]
 > = [
   {
-    url: "/thumbnail2.png",
-    width: 564,
-    height: 292,
+    url: "/thumbnail_3.png",
+    width: 1200,
+    height: 630,
     alt: SITE_NAME,
   },
 ];
