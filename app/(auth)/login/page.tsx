@@ -20,12 +20,15 @@ export default function LoginPage() {
       <LoginForm />
 
       <div className="flex flex-col items-center gap-2 text-[13px]">
-        <Link
-          href="/forgot-password"
-          className="font-bold text-[var(--accent)] hover:opacity-80"
-        >
-          비밀번호 찾기
-        </Link>
+        <p className="text-[var(--text-sub)]">
+          비밀번호를 잊으셨나요?{" "}
+          <Link
+            href="/forgot-password"
+            className="font-bold text-[var(--accent)] hover:opacity-80"
+          >
+            비밀번호 찾기
+          </Link>
+        </p>
         <p className="text-[var(--text-sub)]">
           아직 계정이 없으신가요?{" "}
           <Link

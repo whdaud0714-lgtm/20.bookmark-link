@@ -10,7 +10,7 @@ export const siteOgImage: NonNullable<
   NonNullable<Metadata["openGraph"]>["images"]
 > = [
   {
-    url: "/북마크 썸네일 제작.png",
+    url: "/thumbnail.png",
     width: 2400,
     height: 1260,
     alt: SITE_NAME,
